@@ -50,11 +50,11 @@ namespace EntityFrameworkCore.Generator
             string projectNamespace = _options.Project.Namespace;
             _options.Project.Namespace = projectNamespace;
 
-            string contextClass = _options.Data.Context.Name;
-            contextClass = _namer.UniqueClassName(contextClass);
-
             string contextNamespace = _options.Data.Context.Namespace;
             string contextBaseClass = _options.Data.Context.BaseClass;
+
+            string contextClass = _options.Data.Context.Name;
+            contextClass = _namer.UniqueClassName(contextNamespace, contextClass);
 
             entityContext.ContextClass = contextClass;
             entityContext.ContextNamespace = contextNamespace;
@@ -117,16 +117,15 @@ namespace EntityFrameworkCore.Generator
             if (entityClass.IsNullOrEmpty())
                 entityClass = ToClassName(tableSchema.Name, tableSchema.Schema);
 
-            entityClass = _namer.UniqueClassName(entityClass);
 
             string entityNamespace = _options.Data.Entity.Namespace;
             string entiyBaseClass = _options.Data.Entity.BaseClass;
 
-
-            string mappingName = entityClass + "Map";
-            mappingName = _namer.UniqueClassName(mappingName);
+            entityClass = _namer.UniqueClassName(entityNamespace, entityClass);
 
             string mappingNamespace = _options.Data.Mapping.Namespace;
+            string mappingName = entityClass + "Map";
+            mappingName = _namer.UniqueClassName(mappingName);
 
             string contextName = ContextName(entityClass);
             contextName = ToPropertyName(entityContext.ContextClass, contextName);
