@@ -75,4 +75,26 @@ public class UniqueNamerTests
         var name = uniqueNamer.UniqueContextName("Namespace", "Class");
         name.Should().Be("Class");
     }
+
+    [Fact]
+    public void PrependsNamespaceToDuplicateContextNames()
+    {
+        var uniqueNamer = new UniqueNamer();
+        var firstName = uniqueNamer.UniqueClassName("FirstNamespace", "Class");
+        var secondName = uniqueNamer.UniqueClassName("SecondNamespace", "Class");
+        firstName.Should().Be("FirstNamespaceClass");
+        secondName.Should().Be("SecondNamespaceClass");
+    }
+
+    [Fact]
+    public void AppendsNumbersToDuplicateContextNamesWithSameNamespaces()
+    {
+        var uniqueNamer = new UniqueNamer();
+        var firstName = uniqueNamer.UniqueClassName("FirstNamespace", "Class");
+        var secondName = uniqueNamer.UniqueClassName("SecondNamespace", "Class");
+        var thirdName = uniqueNamer.UniqueClassName("SecondNamespace", "Class");
+        firstName.Should().Be("FirstNamespaceClass");
+        secondName.Should().Be("SecondNamespaceClass");
+        thirdName.Should().Be("SecondNamespaceClass1");
+    }
 }
