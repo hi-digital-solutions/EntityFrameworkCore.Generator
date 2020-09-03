@@ -50,7 +50,12 @@ namespace EntityFrameworkCore.Generator
 
         public string UniqueContextName(string name)
         {
-            const string globalContextname = "global::ContextName";
+            return UniqueContextName("", name);
+        }
+        
+        public string UniqueContextName(string @namespace, string name)
+        {
+            string globalContextname = "global::ContextName::" + @namespace;
             return UniqueName(globalContextname, name);
         }
 
