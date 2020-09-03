@@ -13,7 +13,7 @@ public class UniqueNamerTests
     }
     
     [Fact]
-    public void AppendsNumbersToDuplicateClassNames()
+    public void AppendsNumbersToDuplicateNames()
     {
         var uniqueNamer = new UniqueNamer();
         var firstName = uniqueNamer.UniqueClassName("Class");
@@ -41,38 +41,12 @@ public class UniqueNamerTests
     }
     
     [Fact]
-    public void AppendsNumbersToDuplicateClassNamesWithSameNamespace()
+    public void AppendsNumbersToDuplicateNamesAndNamespaces()
     {
         var uniqueNamer = new UniqueNamer();
         var firstName = uniqueNamer.UniqueClassName("FirstNamespace", "Class");
         var secondName = uniqueNamer.UniqueClassName("FirstNamespace", "Class");
         firstName.Should().Be("Class");
         secondName.Should().Be("Class1");
-    }
-
-    [Fact]
-    public void CreatesUniqueContextNameWithoutNamespace()
-    {
-        var uniqueNamer = new UniqueNamer();
-        var name = uniqueNamer.UniqueContextName("Class");
-        name.Should().Be("Class");
-    }
-    
-    [Fact]
-    public void AppendsNumbersToDuplicateContextNames()
-    {
-        var uniqueNamer = new UniqueNamer();
-        var firstName = uniqueNamer.UniqueContextName("Class");
-        var secondName = uniqueNamer.UniqueContextName("Class");
-        firstName.Should().Be("Class");
-        secondName.Should().Be("Class1");
-    }
-    
-    [Fact]
-    public void CreatesUniqueContextNameWithNamespace()
-    {
-        var uniqueNamer = new UniqueNamer();
-        var name = uniqueNamer.UniqueContextName("Namespace", "Class");
-        name.Should().Be("Class");
     }
 }
