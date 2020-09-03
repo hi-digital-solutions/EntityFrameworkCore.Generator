@@ -460,6 +460,94 @@ create default abc0 as 0
         }
 
         [Fact]
+        public void GenerateWithNamespacedClasses()
+        {
+            var generatorOptions = new GeneratorOptions();
+            generatorOptions.Data.Entity.Namespace = "{Project.Namespace}.Data.Entities.{Table.Schema}";
+            generatorOptions.Data.Mapping.Namespace = "{Project.Namespace}.Data.Mapping.{Table.Schema}";
+            
+            var databaseModel = new DatabaseModel
+            {
+                DatabaseName = "TestDatabase",
+                DefaultSchema = "dbo"
+            };
+            var testTableDbo = new DatabaseTable
+            {
+                Database = databaseModel,
+                Name = "TestTable",
+                Schema = "dbo"
+            };
+            var testTableTst = new DatabaseTable
+            {
+                Database = databaseModel,
+                Name = "TestTable",
+                Schema = "tst"
+            };
+            databaseModel.Tables.Add(testTableDbo);
+            databaseModel.Tables.Add(testTableTst);
+
+            var identifierColumnDbo = new DatabaseColumn
+            {
+                Table = testTableDbo,
+                Name = "Id",
+                IsNullable = false,
+                StoreType = "int"
+            };
+            var identifierColumnTst = new DatabaseColumn
+            {
+                Table = testTableTst,
+                Name = "Id",
+                IsNullable = false,
+                StoreType = "int"
+            };
+            testTableDbo.Columns.Add(identifierColumnDbo);
+            testTableDbo.Columns.Add(identifierColumnTst);
+
+            var nameColumnDbo = new DatabaseColumn
+            {
+                Table = testTableDbo,
+                Name = "Name",
+                IsNullable = true,
+                StoreType = "varchar(50)"
+            };
+            var nameColumnTst = new DatabaseColumn
+            {
+                Table = testTableTst,
+                Name = "Name",
+                IsNullable = true,
+                StoreType = "varchar(50)"
+            };
+            testTableDbo.Columns.Add(nameColumnDbo);
+            testTableDbo.Columns.Add(nameColumnTst);
+
+            var generator = new ModelGenerator(NullLoggerFactory.Instance);
+
+            var typeMappingSource = CreateTypeMappingSource();
+
+            var result = generator.Generate(generatorOptions, databaseModel, typeMappingSource);
+
+            result.ContextClass.Should().Be("TestDatabaseContext");
+            result.ContextNamespace.Should().Be("TestDatabase.Data");
+            result.Entities.Count.Should().Be(2);
+
+            var firstEntity = result.Entities[0];
+            firstEntity.TableName.Should().Be("TestTable");
+            firstEntity.TableSchema.Should().Be("dbo");
+            firstEntity.EntityClass.Should().Be("TestTable");
+            firstEntity.EntityNamespace.Should().Be("TestDatabase.Data.Entities.Dbo");
+            firstEntity.MappingClass.Should().Be("TestTableMap");
+            firstEntity.MappingNamespace.Should().Be("TestDatabase.Data.Mapping.Dbo");
+
+            var secondEntity = result.Entities[1];
+            secondEntity.TableName.Should().Be("TestTable");
+            secondEntity.TableSchema.Should().Be("tst");
+            secondEntity.EntityClass.Should().Be("TestTable");
+            secondEntity.EntityNamespace.Should().Be("TestDatabase.Data.Entities.Tst");
+            secondEntity.MappingClass.Should().Be("TestTableMap1");
+            secondEntity.MappingNamespace.Should().Be("TestDatabase.Data.Mapping.Tst");
+
+        }
+        [Fact]
         public void GenerateIgnoreTable()
         {
             var generatorOptions = new GeneratorOptions();
