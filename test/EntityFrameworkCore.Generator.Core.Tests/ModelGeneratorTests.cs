@@ -543,7 +543,7 @@ create default abc0 as 0
             secondEntity.TableSchema.Should().Be("tst");
             secondEntity.EntityClass.Should().Be("TestTable");
             secondEntity.EntityNamespace.Should().Be("TestDatabase.Data.Entities.Tst");
-            secondEntity.MappingClass.Should().Be("TestTableMap1");
+            secondEntity.MappingClass.Should().Be("TestTableMap");
             secondEntity.MappingNamespace.Should().Be("TestDatabase.Data.Mapping.Tst");
 
         }

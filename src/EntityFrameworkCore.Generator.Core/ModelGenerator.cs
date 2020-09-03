@@ -125,7 +125,7 @@ namespace EntityFrameworkCore.Generator
 
             string mappingNamespace = _options.Data.Mapping.Namespace;
             string mappingName = entityClass + "Map";
-            mappingName = _namer.UniqueClassName(mappingName);
+            mappingName = _namer.UniqueClassName(mappingNamespace, mappingName);
 
             string contextName = ContextName(entityClass);
             contextName = ToPropertyName(entityContext.ContextClass, contextName);
